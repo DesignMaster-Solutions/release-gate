@@ -36,4 +36,19 @@ JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=<you> JIRA_TOKEN=<api token> n
 The demo in the video runs on a free Atlassian developer site (`dms-release-gate.atlassian.net`, project `SHOP`) seeded with this script: version 1.0 comes out GO WITH RISKS, 1.1 comes out NO-GO.
 
 
+## Demo video
+
+https://vimeo.com/1240625406 (2:23): Rovo answers GO WITH RISKS for version 1.0 and NO-GO for 1.1 on the demo site,
+with the real Jira data and the test run.
+
+## For judges
+
+1. Open the installation link from the Devpost submission and install Release Gate on a Jira Cloud site with Rovo enabled.
+2. Seed demo data in any project (or use your own versions):
+   `JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=<you> JIRA_TOKEN=<api token> node scripts/seed-demo.mjs <PROJECT KEY>`
+3. In Jira, open Ask Rovo, change the agent to **Release Gate** and ask "What is blocking version 1.0?" or
+   "Can our next release go live?". Version 1.0 comes out GO WITH RISKS, 1.1 NO-GO.
+
+No configuration, no external accounts: the app only reads Jira (`read:jira-work`).
+
 Built by Design Master Solutions LLC for Codegeist 2026. MIT.

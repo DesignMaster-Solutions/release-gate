@@ -38,7 +38,7 @@ The demo in the video runs on a free Atlassian developer site (`dms-release-gate
 
 ## Demo video
 
-https://vimeo.com/1240625406 (2:23): Rovo answers GO WITH RISKS for version 1.0 and NO-GO for 1.1 on the demo site,
+https://youtu.be/gc8xQk8Q1Jc (2:23): Rovo answers GO WITH RISKS for version 1.0 and NO-GO for 1.1 on the demo site,
 with the real Jira data and the test run.
 
 ## For judges

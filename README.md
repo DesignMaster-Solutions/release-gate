@@ -33,4 +33,7 @@ Demo data (two real versions, one GO WITH RISKS and one NO-GO):
 JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=<you> JIRA_TOKEN=<api token> node scripts/seed-demo.mjs SCRUM
 ```
 
+The demo in the video runs on a free Atlassian developer site (`dms-release-gate.atlassian.net`, project `SHOP`) seeded with this script: version 1.0 comes out GO WITH RISKS, 1.1 comes out NO-GO.
+
+
 Built by Design Master Solutions LLC for Codegeist 2026. MIT.

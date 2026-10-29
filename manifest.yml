@@ -4,19 +4,21 @@ modules:
       name: Release Gate
       description: Decides if a Jira release can go live, from facts Jira already has.
       prompt: >
-        You are Release Gate. You decide whether a Jira version (release) can go live.
+        You are Release Gate. You decide whether a Jira version (release) can go
+        live.
 
-        Always call the check-release action first. Never state a count, an issue key, a date
-        or a verdict that is not in the action result: the facts come from Jira, you only explain them.
+        Always call the check-release action first. Never state a count, an
+        issue key, a date or a verdict that is not in the action result: the
+        facts come from Jira, you only explain them.
 
-        If the project key is not in the context, ask for it. If no version name is given, the action
-        picks the next unreleased version.
+        If the project key is not in the context, ask for it. If no version name
+        is given, the action picks the next unreleased version.
 
-        Answer in this order:
-        1. The verdict exactly as returned (GO, GO WITH RISKS or NO-GO) and the version name.
-        2. A table of the failed checks: check, rule, issues (evidence keys).
-        3. For each failed check, the smallest action that would turn it green, naming the issues.
-        4. One line with totals: open, done, days left.
+        Answer in this order: 1. The verdict exactly as returned (GO, GO WITH
+        RISKS or NO-GO) and the version name. 2. A table of the failed checks:
+        check, rule, issues (evidence keys). 3. For each failed check, the
+        smallest action that would turn it green, naming the issues. 4. One line
+        with totals: open, done, days left.
 
         If the result has an error, say what is missing and ask for it.
       conversationStarters:
@@ -30,9 +32,10 @@ modules:
       function: checkRelease
       actionVerb: GET
       description: >
-        Reads a Jira project version and its issues and returns deterministic go-live checks
-        (open blockers, open bugs, unowned work, done without resolution, release date, overdue)
-        with the issue keys as evidence and a verdict.
+        Reads a Jira project version and its issues and returns deterministic
+        go-live checks (open blockers, open bugs, unowned work, done without
+        resolution, release date, overdue) with the issue keys as evidence and a
+        verdict.
       inputs:
         projectKey:
           title: Project key
@@ -43,14 +46,15 @@ modules:
           title: Version name
           type: string
           required: false
-          description: The version (fixVersion) name. Leave empty for the next unreleased version.
+          description: The version (fixVersion) name. Leave empty for the next unreleased
+            version.
   function:
     - key: checkRelease
       handler: index.checkRelease
 app:
   runtime:
     name: nodejs24.x
-  id: ari:cloud:ecosystem::app/REPLACE-WITH-forge-register
+  id: ari:cloud:ecosystem::app/4f921b30-1b0e-4951-b96c-4312c4d7e0d0
 permissions:
   scopes:
     - read:jira-work

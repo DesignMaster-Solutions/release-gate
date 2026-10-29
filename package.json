@@ -1,0 +1,10 @@
+{
+  "name": "release-gate",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Rovo agent for Jira that decides if a release can go live from deterministic Jira facts.",
+  "license": "MIT",
+  "scripts": { "test": "node --test test/" },
+  "dependencies": { "@forge/api": "^6.0.0" }
+}

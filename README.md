@@ -27,4 +27,10 @@ forge register && forge deploy && forge install --product jira
 
 Then open Rovo in Jira and ask "Can our next release go live?".
 
+Demo data (two real versions, one GO WITH RISKS and one NO-GO):
+
+```bash
+JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=<you> JIRA_TOKEN=<api token> node scripts/seed-demo.mjs SCRUM
+```
+
 Built by Design Master Solutions LLC for Codegeist 2026. MIT.

@@ -25,7 +25,9 @@ npm test                 # rules, no Jira needed
 forge register && forge deploy && forge install --product jira
 ```
 
-Then open Rovo in Jira and ask "Can our next release go live?".
+Then open Rovo in Jira and ask "Can our next release go live?", or "Which of our upcoming releases are ready?"
+for one table with every unreleased version (nearest release date first), its verdict and the failed checks
+(`check-all-releases`, first 10 versions by date).
 
 Demo data (two real versions, one GO WITH RISKS and one NO-GO):
 
@@ -47,7 +49,8 @@ with the real Jira data and the test run.
 2. Seed demo data in any project (or use your own versions):
    `JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=<you> JIRA_TOKEN=<api token> node scripts/seed-demo.mjs <PROJECT KEY>`
 3. In Jira, open Ask Rovo, change the agent to **Release Gate** and ask "What is blocking version 1.0?" or
-   "Can our next release go live?". Version 1.0 comes out GO WITH RISKS, 1.1 NO-GO.
+   "Can our next release go live?". Version 1.0 comes out GO WITH RISKS, 1.1 NO-GO. "Which of our upcoming
+   releases are ready?" lists both in one table with the totals.
 
 No configuration, no external accounts: the app only reads Jira (`read:jira-work`).
 

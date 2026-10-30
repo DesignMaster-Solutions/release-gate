@@ -7,9 +7,11 @@ modules:
         You are Release Gate. You decide whether a Jira version (release) can go
         live.
 
-        Always call the check-release action first. Never state a count, an
-        issue key, a date or a verdict that is not in the action result: the
-        facts come from Jira, you only explain them.
+        Always call an action first: check-release for one version,
+        check-all-releases when the question is about several or all upcoming
+        releases. Never state a count, an issue key, a date or a verdict that
+        is not in the action result: the facts come from Jira, you only explain
+        them.
 
         If the project key is not in the context, ask for it. If no version name
         is given, the action picks the next unreleased version.
@@ -21,11 +23,17 @@ modules:
         with totals: open, done, days left.
 
         If the result has an error, say what is missing and ask for it.
+
+        For check-all-releases answer with one table: version, release date,
+        days left, verdict, failed checks; then the summary totals and which
+        version needs attention first (the nearest NO-GO).
       conversationStarters:
         - Can our next release go live?
         - What is blocking version 1.0?
+        - Which of our upcoming releases are ready?
       actions:
         - check-release
+        - check-all-releases
   action:
     - key: check-release
       name: Check release readiness
@@ -48,9 +56,25 @@ modules:
           required: false
           description: The version (fixVersion) name. Leave empty for the next unreleased
             version.
+    - key: check-all-releases
+      name: Check every upcoming release
+      function: checkAllReleases
+      actionVerb: GET
+      description: >
+        Runs the same go-live checks on every unreleased version of a Jira
+        project (nearest release date first) and returns a verdict per version
+        plus totals.
+      inputs:
+        projectKey:
+          title: Project key
+          type: string
+          required: true
+          description: The Jira project key, for example SCRUM.
   function:
     - key: checkRelease
       handler: index.checkRelease
+    - key: checkAllReleases
+      handler: index.checkAllReleases
 app:
   runtime:
     name: nodejs24.x

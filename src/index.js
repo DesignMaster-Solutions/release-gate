@@ -1,5 +1,5 @@
 import api, { route } from '@forge/api';
-import { releaseFacts } from './facts.js';
+import { releaseFacts, releasesOverview } from './facts.js';
 
 const FIELDS = ['summary', 'status', 'priority', 'issuetype', 'assignee', 'resolution'];
 
@@ -45,6 +45,24 @@ export async function checkRelease(payload) {
     const version = await findVersion(projectKey, payload.versionName);
     const facts = releaseFacts(version, await versionIssues(version.id));
     return { project: projectKey, ...facts };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+// shortcut: first 10 unreleased versions by date; a project with more gets the nearest 10
+export async function checkAllReleases(payload) {
+  const projectKey = (payload.projectKey ?? payload.context?.jira?.projectKey ?? '').toUpperCase();
+  if (!projectKey) return { error: 'Ask the user for the Jira project key.' };
+  try {
+    const versions = (await jira(route`/rest/api/3/project/${projectKey}/versions`))
+      .filter((v) => !v.released && !v.archived)
+      .sort((a, b) => (a.releaseDate ?? '9999').localeCompare(b.releaseDate ?? '9999'))
+      .slice(0, 10);
+    if (versions.length === 0) return { error: `${projectKey} has no unreleased version.` };
+    const entries = [];
+    for (const version of versions) entries.push({ version, issues: await versionIssues(version.id) });
+    return { project: projectKey, ...releasesOverview(entries) };
   } catch (e) {
     return { error: e.message };
   }

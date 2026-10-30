@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { releaseFacts } from '../src/facts.js';
+import * as facts from '../src/facts.js';
+const { releaseFacts } = facts;
 
 const issue = (k, cat, extra = {}) => ({
   key: k,
@@ -45,4 +46,16 @@ test('soft problems are GO WITH RISKS', () => {
   assert.deepEqual(ev.open_work_has_owner, ['A-7']);
   assert.deepEqual(ev.done_has_resolution, ['A-8']);
   assert.equal(f.checks.find((c) => c.id === 'has_release_date').ok, false);
+});
+
+test('overview orders unreleased versions by release date and counts verdicts', () => {
+  const { releasesOverview } = facts;
+  const o = releasesOverview([
+    { version: { name: '2.0', releaseDate: '2026-12-01' }, issues: [issue('A-1', 'new', { priority: 'Highest' })] },
+    { version: { name: '1.1' }, issues: [issue('A-2', 'done')] },
+    { version: { name: '1.0', releaseDate: '2026-11-15' }, issues: [issue('A-3', 'new', { type: 'Bug' })] },
+  ], now);
+  // 1.1 has no release date: sorted last and a risk, not a GO
+  assert.deepEqual(o.releases.map((r) => [r.version, r.verdict]), [['1.0', 'GO WITH RISKS'], ['2.0', 'NO-GO'], ['1.1', 'GO WITH RISKS']]);
+  assert.deepEqual(o.summary, { go: 0, go_with_risks: 2, no_go: 1 });
 });

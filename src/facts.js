@@ -75,3 +75,12 @@ export function releaseFacts(version, issues, now = new Date()) {
     checks,
   };
 }
+
+/** Every unreleased version at once: nearest release date first, undated last, with verdict totals. */
+export function releasesOverview(entries, now = new Date()) {
+  const releases = entries
+    .map(({ version, issues }) => releaseFacts(version, issues, now))
+    .sort((a, b) => (a.release_date ?? '9999').localeCompare(b.release_date ?? '9999'));
+  const count = (v) => releases.filter((r) => r.verdict === v).length;
+  return { releases, summary: { go: count('GO'), go_with_risks: count('GO WITH RISKS'), no_go: count('NO-GO') } };
+}

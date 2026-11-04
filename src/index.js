@@ -1,5 +1,8 @@
 import api, { route } from '@forge/api';
-import Resolver from '@forge/resolver';
+import ResolverModule from '@forge/resolver';
+
+// @forge/resolver is CommonJS with exports.default: an ESM default import gets the whole module object.
+const Resolver = ResolverModule.default ?? ResolverModule;
 import { releaseFacts, releasesOverview } from './facts.js';
 
 const FIELDS = ['summary', 'status', 'priority', 'issuetype', 'assignee', 'resolution'];

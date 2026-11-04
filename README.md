@@ -29,6 +29,10 @@ Then open Rovo in Jira and ask "Can our next release go live?", or "Which of our
 for one table with every unreleased version (nearest release date first), its verdict and the failed checks
 (`check-all-releases`, first 10 versions by date).
 
+Without Rovo, open the project and pick **Release Gate** in the sidebar (Apps): a project page (UI Kit, `jira:projectPage`)
+shows every unreleased version of that project with its verdict, release date, open work and the failed checks with
+their issue keys. It calls the same `check-all-releases` function as the agent, so the page and Rovo can never disagree.
+
 Demo data (two real versions, one GO WITH RISKS and one NO-GO):
 
 ```bash

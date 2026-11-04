@@ -70,11 +70,23 @@ modules:
           type: string
           required: true
           description: The Jira project key, for example SCRUM.
+  jira:projectPage:
+    - key: release-gate-page
+      resource: main
+      resolver:
+        function: resolver
+      render: native
+      title: Release Gate
   function:
+    - key: resolver
+      handler: index.handler
     - key: checkRelease
       handler: index.checkRelease
     - key: checkAllReleases
       handler: index.checkAllReleases
+resources:
+  - key: main
+    path: src/frontend/index.jsx
 app:
   runtime:
     name: nodejs24.x

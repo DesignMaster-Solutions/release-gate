@@ -5,6 +5,14 @@
   "type": "module",
   "description": "Rovo agent for Jira that decides if a release can go live from deterministic Jira facts.",
   "license": "MIT",
-  "scripts": { "test": "node --test test/" },
-  "dependencies": { "@forge/api": "^6.0.0" }
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "@forge/api": "^6.0.0",
+    "@forge/bridge": "^7.2.1",
+    "@forge/react": "^12.4.0",
+    "@forge/resolver": "^2.0.2",
+    "react": "^18.3.1"
+  }
 }

@@ -1,4 +1,5 @@
 import api, { route } from '@forge/api';
+import Resolver from '@forge/resolver';
 import { releaseFacts, releasesOverview } from './facts.js';
 
 const FIELDS = ['summary', 'status', 'priority', 'issuetype', 'assignee', 'resolution'];
@@ -67,3 +68,8 @@ export async function checkAllReleases(payload) {
     return { error: e.message };
   }
 }
+
+// Project page (UI Kit): the same overview, for the project the page is opened in.
+const resolver = new Resolver();
+resolver.define('overview', ({ context }) => checkAllReleases({ projectKey: context.extension?.project?.key }));
+export const handler = resolver.getDefinitions();

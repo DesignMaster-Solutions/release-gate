@@ -19,8 +19,12 @@ export function releaseFacts(version, issues, now = new Date()) {
   const open = issues.filter((i) => category(i) !== 'done');
   const isBug = (i) => (i.fields?.issuetype?.name ?? '').toLowerCase() === 'bug';
   const isBlocker = (i) => ['highest', 'blocker', 'critical'].includes((i.fields?.priority?.name ?? '').toLowerCase());
-  const releaseDate = version.releaseDate ? new Date(`${version.releaseDate}T23:59:59Z`) : null;
-  const daysLeft = releaseDate ? Math.ceil((releaseDate - now) / DAY) : null;
+  // Calendar days between two dates; ceil() against 23:59 called a release due yesterday "due today".
+  // shortcut: "today" is the UTC date, use the site timezone if teams far from UTC report a day of drift
+  const releaseDate = version.releaseDate ? new Date(`${version.releaseDate}T00:00:00Z`) : null;
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+
+  const daysLeft = releaseDate ? Math.round((releaseDate - today) / DAY) : null;
 
   const checks = [
     {

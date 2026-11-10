@@ -19,7 +19,7 @@ test('clean release is GO', () => {
   const f = releaseFacts({ name: '1.0', releaseDate: '2026-11-20' }, [issue('A-1', 'done'), issue('A-2', 'indeterminate')], now);
   assert.equal(f.verdict, 'GO');
   assert.equal(f.open, 1);
-  assert.equal(f.days_left, 11);
+  assert.equal(f.days_left, 10); // Nov 10 -> Nov 20
 });
 
 test('open blocker is NO-GO with the issue as evidence', () => {
@@ -58,4 +58,16 @@ test('overview orders unreleased versions by release date and counts verdicts', 
   // 1.1 has no release date: sorted last and a risk, not a GO
   assert.deepEqual(o.releases.map((r) => [r.version, r.verdict]), [['1.0', 'GO WITH RISKS'], ['2.0', 'NO-GO'], ['1.1', 'GO WITH RISKS']]);
   assert.deepEqual(o.summary, { go: 0, go_with_risks: 2, no_go: 1 });
+});
+
+// days_left is calendar days: 0 on the release date itself, -1 from the next morning on.
+test('a release due yesterday is overdue, not "due today"', () => {
+  const open = [issue('A-9', 'new')];
+  const today = releaseFacts({ name: '1.0', releaseDate: '2026-11-10' }, open, now);
+  assert.equal(today.days_left, 0);
+  assert.equal(today.checks.find((c) => c.id === 'not_overdue').ok, true);
+  const yesterday = releaseFacts({ name: '1.0', releaseDate: '2026-11-09' }, open, now);
+  assert.equal(yesterday.days_left, -1);
+  assert.equal(yesterday.verdict, 'NO-GO');
+  assert.deepEqual(yesterday.checks.find((c) => c.id === 'not_overdue').evidence, ['A-9']);
 });

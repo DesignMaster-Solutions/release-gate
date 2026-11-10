@@ -28,7 +28,7 @@ test('project page rows: one per version, nearest first, failed checks with thei
   assert.deepEqual(rows[0].failed, ['Open bugs: S-2']);
   assert.deepEqual(rows[1].failed, ['Open blockers: S-9', 'Unowned work: S-9']);
   assert.equal(rows[0].open, '1 of 2 open');
-  assert.equal(rows[0].when, '2026-11-20 (11 days left)');
+  assert.equal(rows[0].when, '2026-11-20 (10 days left)');
 });
 
 test('an undated version with all work done fails only the release-date check', () => {

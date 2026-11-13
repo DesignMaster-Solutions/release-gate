@@ -6,6 +6,9 @@ The agent never counts issues itself. The `check-release` action reads the versi
 from Jira and runs fixed rules; the model only explains the result and suggests the smallest next step.
 Same issue keys in, same verdict out.
 
+**On the Atlassian Marketplace** (free, approved November 13, 2026):
+https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira
+
 | Check | Rule | Effect |
 |---|---|---|
 | `no_open_blockers` | No unfinished Highest/Blocker/Critical issue | NO-GO |

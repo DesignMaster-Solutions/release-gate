@@ -9,6 +9,10 @@ Same issue keys in, same verdict out.
 **On the Atlassian Marketplace** (free, approved November 13, 2026):
 https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira
 
+The listing shows version 2.0.0 because a Marketplace version follows the Forge major version. It is the same
+Forge app as the installation link below, and Forge applies every later production deploy of major version 2 to
+all installs, so an install from the listing gets the current build: both actions and the project page.
+
 | Check | Rule | Effect |
 |---|---|---|
 | `no_open_blockers` | No unfinished Highest/Blocker/Critical issue | NO-GO |

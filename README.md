@@ -9,9 +9,75 @@ Same issue keys in, same verdict out.
 **On the Atlassian Marketplace** (free, approved November 13, 2026):
 https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira
 
-The listing shows version 2.0.0 because a Marketplace version follows the Forge major version. It is the same
-Forge app as the installation link below, and Forge applies every later production deploy of major version 2 to
-all installs, so an install from the listing gets the current build: both actions and the project page.
+## First result in Jira
+
+You need a Jira Cloud site with Rovo available, permission to read the project, and a version
+with issues assigned through **Fix versions**. Installation requires an administrator.
+
+1. Open the [Marketplace listing](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira),
+   choose **Get it now**, and select your Jira site. If already installed, continue in Jira.
+2. Open the project, choose **Ask Rovo**, then open the agent selector next to **Rovo**.
+   Search for **Release Gate** and select it. Asking the default Rovo agent is not the same step.
+3. Send `Check release readiness for project SHOP, version 1.0. Show the verdict, failed checks and issue keys.`
+   Replace `SHOP` and `1.0` with your project key and exact version name.
+4. Read the verdict and the issue keys in each failed check. Open those issues, address the
+   underlying work in Jira, then ask again. Release Gate reads data; it does not change issues,
+   move release dates, or release a version for you.
+
+No terminal, API token, seed script, or Forge registration is needed to use the installed app.
+The development instructions further down are for people building the app.
+
+## Worked example: why the same demo now says NO-GO
+
+On **November 18, 2026**, we ran the prompt above in our QA Jira site with the installed
+Release Gate agent. This is a real QA result, not a customer testimonial or a promise that
+your project will return the same verdict.
+
+| Input or result | Observed value |
+|---|---|
+| Project / version | `SHOP` / `1.0` |
+| Verdict | **NO-GO** |
+| Open / done | **2 / 2** |
+| Release date | **November 12, 2026**, confirmed in Jira |
+| No open bugs | Failed: `SHOP-3`, Shipping quote rounds cents wrong for PR |
+| Open work has owner | Failed: `SHOP-4`, Write release notes for 1.0 |
+| Not overdue | Failed: `SHOP-4`, `SHOP-3` |
+
+The older video below shows **GO WITH RISKS** for 1.0. The release date has since passed
+while those two issues remain open, so the overdue rule now makes it **NO-GO**. A changing
+verdict is expected when dates or Jira data change; the video is a dated demonstration.
+
+One discrepancy in this run: Rovo's prose said **-6 days left**, while replaying the current
+rule against the same Jira data on November 18 returned **-5** (the rule uses the end of the
+release date in UTC and rounds up). The verdict, counts, and failed issue keys matched.
+Use the actual release date when planning; do not treat the AI's day count as independently
+verified. This guide records the discrepancy rather than claiming it is fixed.
+
+The useful next steps are to resolve the bug and assign the release-notes task. The team
+also needs to finish the remaining work or agree on a realistic new release date in Jira.
+Assigning the task alone does not clear the bug or the overdue check. Merely moving the
+date does not complete the work. Ask again after the actual changes; this example does
+not claim those fixes were performed.
+
+[Install Release Gate free and check your own version](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+
+### If your first check does not match
+
+- **Agent missing:** confirm the app is installed on the same Jira site and that Rovo is available;
+  ask the site administrator to check access. Do not register a new Forge app.
+- **Project not found or no permission:** use the project key (for example `SHOP`, not `Storefront`)
+  and confirm you can open that project's issues.
+- **Version not found:** use its exact name. With no name, the app chooses the next unreleased,
+  non-archived version by release date; name the version explicitly when comparing results.
+- **Zero issues:** check the issues' **Fix versions** field. An empty version is **GO WITH RISKS**,
+  not a verified green release.
+- **An overview omits your version:** only the first ten eligible versions are checked.
+  Ask for your version by name. When the action reports that only the first 1,000 issues were
+  read, the counts and verdict may be incomplete; do not treat them as a complete release audit.
+
+**GO** means the listed checks passed for the data read. It is not a deployment approval,
+security review, or guarantee that all work is complete: owned, non-blocking open tasks can
+still pass these checks.
 
 | Check | Rule | Effect |
 |---|---|---|
@@ -20,11 +86,12 @@ all installs, so an install from the listing gets the current build: both action
 | `no_open_bugs` | No unfinished Bug | risk |
 | `open_work_has_owner` | Every unfinished issue has an assignee | risk |
 | `done_has_resolution` | Done issues carry a resolution | risk |
+| `has_issues` | The version has at least one issue | risk |
 | `has_release_date` | The version has a release date | risk |
 
 Runs on Atlassian: no external egress, no storage outside Jira, read-only scopes.
 
-## Run
+## Development only
 
 ```bash
 npm install
@@ -36,9 +103,8 @@ Then open Rovo in Jira and ask "Can our next release go live?", or "Which of our
 for one table with every unreleased version (nearest release date first), its verdict and the failed checks
 (`check-all-releases`, first 10 versions by date).
 
-Without Rovo, open the project and pick **Release Gate** in the sidebar (Apps): a project page (UI Kit, `jira:projectPage`)
-shows every unreleased version of that project with its verdict, release date, open work and the failed checks with
-their issue keys. It calls the same `check-all-releases` function as the agent, so the page and Rovo can never disagree.
+The verified user path above uses Rovo. The project-page source in this public repository is
+not a guarantee that a sidebar page is available in your installed version.
 
 Demo data (two real versions, one GO WITH RISKS and one NO-GO):
 
@@ -46,7 +112,9 @@ Demo data (two real versions, one GO WITH RISKS and one NO-GO):
 JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=<you> JIRA_TOKEN=<api token> node scripts/seed-demo.mjs SCRUM
 ```
 
-The demo in the video runs on a free Atlassian developer site (`dms-release-gate.atlassian.net`, project `SHOP`) seeded with this script: version 1.0 comes out GO WITH RISKS, 1.1 comes out NO-GO.
+The video used a free Atlassian developer site (`dms-release-gate.atlassian.net`, project `SHOP`)
+seeded with this script. Its recorded verdicts depend on the dates and data at recording time;
+see the newer worked example above.
 
 
 ## Demo video

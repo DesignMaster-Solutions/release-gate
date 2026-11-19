@@ -47,11 +47,7 @@ The older video below shows **GO WITH RISKS** for 1.0. The release date has sinc
 while those two issues remain open, so the overdue rule now makes it **NO-GO**. A changing
 verdict is expected when dates or Jira data change; the video is a dated demonstration.
 
-One discrepancy in this run: Rovo's prose said **-6 days left**, while replaying the current
-rule against the same Jira data on November 18 returned **-5** (the rule uses the end of the
-release date in UTC and rounds up). The verdict, counts, and failed issue keys matched.
-Use the actual release date when planning; do not treat the AI's day count as independently
-verified. This guide records the discrepancy rather than claiming it is fixed.
+On November 19, we found why these values differed: the Forge source still rounded the remaining hours to the end of the release date, while the public guide repository had already switched to UTC calendar days. The deployable source now uses UTC date boundaries. For this same QA input, the action returns **-6** on November 18; a release due today is **0**, and becomes overdue on the next UTC date. Focused regression tests cover these boundaries. This corrects the deterministic action result; a post-deploy Rovo interaction remains unverified.
 
 The useful next steps are to resolve the bug and assign the release-notes task. The team
 also needs to finish the remaining work or agree on a realistic new release date in Jira.

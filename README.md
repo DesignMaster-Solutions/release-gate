@@ -49,6 +49,22 @@ verdict is expected when dates or Jira data change; the video is a dated demonst
 
 On November 19, we found why these values differed: the Forge source still rounded the remaining hours to the end of the release date, while the public guide repository had already switched to UTC calendar days. The deployable source now uses UTC date boundaries. For this same QA input, the action returns **-6** on November 18; a release due today is **0**, and becomes overdue on the next UTC date. Focused regression tests cover these boundaries. This corrects the deterministic action result; a post-deploy Rovo interaction remains unverified.
 
+### Same issues on 20 November 2026
+
+The live SHOP 1.0 issues were read again from Jira on 20 November 2026 and passed through `releaseFacts`, the function the deployed `check-release` action uses to decide the verdict. Nothing in the version had changed: release date 12 November 2026, SHOP-1 and SHOP-2 done, SHOP-3 an open bug, SHOP-4 an open task with no assignee.
+
+| Input or result | Observed value |
+|---|---|
+| Project / version | `SHOP` / `1.0` |
+| Verdict | **NO-GO** |
+| Days left | **-8** |
+| Open / done | **2 / 2** |
+| No open bugs | Failed: `SHOP-3`, Shipping quote rounds cents wrong for PR |
+| Open work has owner | Failed: `SHOP-4`, Write release notes for 1.0 |
+| Not overdue | Failed: `SHOP-4`, `SHOP-3` |
+
+18 November was -6 for this release date. 20 November is -8. The function counts UTC calendar dates, so two later dates are two days further overdue. A release due on the day of the check is still 0. This run called the function with that Jira payload. A new Rovo chat was not opened.
+
 The useful next steps are to resolve the bug and assign the release-notes task. The team
 also needs to finish the remaining work or agree on a realistic new release date in Jira.
 Assigning the task alone does not clear the bug or the overdue check. Merely moving the
@@ -102,7 +118,7 @@ for one table with every unreleased version (nearest release date first), its ve
 The verified user path above uses Rovo. The project-page source in this public repository is
 not a guarantee that a sidebar page is available in your installed version.
 
-Demo data (two real versions, one GO WITH RISKS and one NO-GO):
+Demo data (the seed script creates two versions; the video recorded one GO WITH RISKS and one NO-GO; current QA numbers are in the worked example above):
 
 ```bash
 JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=<you> JIRA_TOKEN=<api token> node scripts/seed-demo.mjs SCRUM
@@ -124,8 +140,9 @@ with the real Jira data and the test run.
 2. Seed demo data in any project (or use your own versions):
    `JIRA_SITE=https://<site>.atlassian.net JIRA_EMAIL=<you> JIRA_TOKEN=<api token> node scripts/seed-demo.mjs <PROJECT KEY>`
 3. In Jira, open Ask Rovo, change the agent to **Release Gate** and ask "What is blocking version 1.0?" or
-   "Can our next release go live?". Version 1.0 comes out GO WITH RISKS, 1.1 NO-GO. "Which of our upcoming
-   releases are ready?" lists both in one table with the totals.
+   "Can our next release go live?". On the QA project, compare the verdict and the issue keys with the
+   worked example above. The video's GO WITH RISKS for 1.0 is the result from before that release date
+   passed. "Which of our upcoming releases are ready?" lists the unreleased versions in one table with the totals.
 
 No configuration, no external accounts: the app only reads Jira (`read:jira-work`).
 

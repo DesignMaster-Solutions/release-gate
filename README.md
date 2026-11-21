@@ -88,11 +88,28 @@ The table above is NO-GO because SHOP-3 and SHOP-4 are still open. The date by i
 
 An empty version with that same date is **GO WITH RISKS**. The empty-version check fails and lists no keys. A missing release date fails the same way. Only the checks that point at work name issue keys. This run called the function. A new Rovo chat was not opened.
 
+### Every upcoming release on 21 November 2026
+
+The public listing highlight "Every upcoming release in one table" shows the SHOP overview measured at 21 November 2026, 05:40 UTC. Nearest release date first. Only the checks that failed are on the table.
+
+![SHOP overview on 21 November 2026. Version 1.1 lists no_open_blockers because SHOP-5 is Highest. Version 1.0 omits that check because SHOP-3 is Medium.](docs/highlight-2-overview.jpg)
+
+| Version | Release date | Days left | Verdict | Failed checks |
+|---|---|---|---|---|
+| 1.1 | 26 October 2026 | -26 | NO-GO | `no_open_blockers` SHOP-5; `no_open_bugs` SHOP-5; `open_work_has_owner` SHOP-5; `not_overdue` SHOP-6, SHOP-5 |
+| 1.0 | 12 November 2026 | -9 | NO-GO | `no_open_bugs` SHOP-3; `open_work_has_owner` SHOP-4; `not_overdue` SHOP-4, SHOP-3 |
+
+Version 1.0 omits `no_open_blockers` because SHOP-3 is Medium. Version 1.1 lists it because SHOP-5 is Highest and still open. Passed checks stay off the table. Days left are UTC calendar days.
+
+This called `releasesOverview` with the live Jira payload, in source commit `9134e0d`. A new Rovo chat was not opened. Production received that build on 21 November 2026 at 01:48 (Forge job `64cfed92056f`). The public listing version is still 2.0.0.
+
+[Install Release Gate free and check your own version](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+
 ### A High bug is not listed as a blocker
 
-The public highlight for "which upcoming releases are ready" comes from an older Rovo answer. That answer named checks in one cell, including "No open blockers", next to a board whose open bug is High priority. High is not Highest, Blocker or Critical, so that check does not fail.
+High is not Highest, Blocker or Critical, so `no_open_blockers` stays off `failed` for a High bug. The 1.1 row above is the live case: SHOP-5 is Highest. The input below is a separate function example.
 
-`releaseFacts` now returns `failed` with only the checks that are not ok. The Rovo prompt copies that list. When `issues` is empty, it says no issue key and does not invent one.
+`releaseFacts` returns `failed` with only the checks that are not ok. The Rovo prompt copies that list. When `issues` is empty, it says no issue key and does not invent one.
 
 Input passed to the function: version `1.0`, release date 12 November 2026, check time 20 November 2026 05:47 UTC, one unfinished Bug `SHOP-3` at priority High, with an assignee.
 
@@ -105,9 +122,7 @@ Input passed to the function: version `1.0`, release date 12 November 2026, chec
 
 An empty version `9.0` with release date 1 December 2026, checked 10 November 2026 12:00 UTC, is **GO WITH RISKS**. `failed` is only `has_issues`, and `issues` is `[]`. `no_open_blockers` is not listed.
 
-This called the function in source commit `9134e0d`. A new Rovo chat was not opened. The production environment that a Marketplace install runs received this build on 21 November 2026 at 01:48 (Forge job `64cfed92056f`). The public listing version is still 2.0.0. The highlight image was not replaced.
-
-[Install Release Gate free and check your own version](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+This called the function in source commit `9134e0d`. A new Rovo chat was not opened. The production environment that a Marketplace install runs received this build on 21 November 2026 at 01:48 (Forge job `64cfed92056f`). The public listing version is still 2.0.0. The public highlight is the 21 November overview above.
 
 ### If your first check does not match
 

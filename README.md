@@ -71,6 +71,22 @@ Assigning the task alone does not clear the bug or the overdue check. Merely mov
 date does not complete the work. Ask again after the actual changes; this example does
 not claim those fixes were performed.
 
+### A passed date after the work is finished
+
+The table above is NO-GO because SHOP-3 and SHOP-4 are still open. The date by itself does not keep that verdict. The same release date and the same check time, with all four issues Done and each carrying a resolution, is what `releaseFacts` returns:
+
+| Input or result | Observed value |
+|---|---|
+| Project / version | `SHOP` / `1.0` |
+| Release date | **November 12, 2026** |
+| Check time | **20 November 2026, 05:47 UTC** |
+| Days left | **-8** |
+| Open / done | **0 / 4** |
+| Verdict | **GO** |
+| Not overdue | Passed. No issue key is listed. |
+
+An empty version with that same date is **GO WITH RISKS**. The empty-version check fails and lists no keys. A missing release date fails the same way. Only the checks that point at work name issue keys. This run called the function. A new Rovo chat was not opened.
+
 [Install Release Gate free and check your own version](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
 
 ### If your first check does not match
@@ -82,7 +98,9 @@ not claim those fixes were performed.
 - **Version not found:** use its exact name. With no name, the app chooses the next unreleased,
   non-archived version by release date; name the version explicitly when comparing results.
 - **Zero issues:** check the issues' **Fix versions** field. An empty version is **GO WITH RISKS**,
-  not a verified green release.
+  not a verified green release. That check lists no issue keys.
+- **The date has passed and the verdict is GO:** every issue in the version is done. The overdue
+  check fails only while work is open. Days left can stay negative on a GO.
 - **An overview omits your version:** only the first ten eligible versions are checked.
   Ask for your version by name. When the action reports that only the first 1,000 issues were
   read, the counts and verdict may be incomplete; do not treat them as a complete release audit.

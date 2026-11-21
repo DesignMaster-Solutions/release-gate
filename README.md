@@ -20,9 +20,10 @@ with issues assigned through **Fix versions**. Installation requires an administ
    Search for **Release Gate** and select it. Asking the default Rovo agent is not the same step.
 3. Send `Check release readiness for project SHOP, version 1.0. Show the verdict, failed checks and issue keys.`
    Replace `SHOP` and `1.0` with your project key and exact version name.
-4. Read the verdict and the issue keys in each failed check. Open those issues, address the
-   underlying work in Jira, then ask again. Release Gate reads data; it does not change issues,
-   move release dates, or release a version for you.
+4. Read the verdict. A failed check that names work lists the issue keys. An empty version
+   and a missing release date fail with no keys. A passed date fails only while work is open.
+   Open the named issues, address the underlying work in Jira, then ask again. Release Gate
+   reads data; it does not change issues, move release dates, or release a version for you.
 
 No terminal, API token, seed script, or Forge registration is needed to use the installed app.
 The development instructions further down are for people building the app.

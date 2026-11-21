@@ -105,7 +105,7 @@ Input passed to the function: version `1.0`, release date 12 November 2026, chec
 
 An empty version `9.0` with release date 1 December 2026, checked 10 November 2026 12:00 UTC, is **GO WITH RISKS**. `failed` is only `has_issues`, and `issues` is `[]`. `no_open_blockers` is not listed.
 
-This called the function in source commit `9134e0d`. A new Rovo chat was not opened. The Marketplace install runs this build only after the production deploy of that commit.
+This called the function in source commit `9134e0d`. A new Rovo chat was not opened. The production environment that a Marketplace install runs received this build on 21 November 2026 at 01:48 (Forge job `64cfed92056f`). The public listing version is still 2.0.0. The highlight image was not replaced.
 
 [Install Release Gate free and check your own version](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
 

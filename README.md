@@ -149,7 +149,9 @@ This called the function in source commit `9134e0d`. A new Rovo chat was not ope
 - **Project not found or no permission:** these are different sentences. See
   [When Jira refuses the project](#when-jira-refuses-the-project). A 404 asks you to check the key.
   A 401 or 403 does not.
-- **Version not found:** use its exact name. With no name, the app chooses the next unreleased,
+- **Version not found:** the sentence lists the names Jira returned. See
+  [When the version name is not in the project](#when-the-version-name-is-not-in-the-project).
+  With no name, the app chooses the next unreleased,
   non-archived version by release date; name the version explicitly when comparing results.
 - **Zero issues:** check the issues' **Fix versions** field. An empty version is **GO WITH RISKS**,
   not a verified green release. That check lists no issue keys.
@@ -195,6 +197,20 @@ Replace `ZZZ` with the key you sent. The number in the third sentence is the sta
 **Result:** `SHOP has no unreleased version.` Name a version when you want a released one checked.
 
 On 22 November 2026 a read of versions for the key `NOSUCH` returned HTTP 404. A read of versions for `SHOP` returned HTTP 200, so that key is not the 404 sentence. A 401 and a 403 were not produced on that site. Those two statuses are the second sentence in the production check (`jiraErrorMessage`, source `9134e0d`). This was not a new Rovo chat.
+
+## When the version name is not in the project
+
+[Install Release Gate for Jira](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+If you name a version and that name is not in the project, the check does not show Jira's JSON.
+It shows one sentence, and that sentence lists the version names Jira returned.
+
+**Input:** project key `SHOP`, version name `9.9`.
+
+**Result:** `Version "9.9" not found in SHOP. Known: 1.0, 1.1`
+
+The name in quotes is the name you sent. The key is the project key in uppercase. The list after `Known:` is every version name Jira returned for that project, in that order. A released or archived name is included when Jira returns it. Letter case does not matter: `1.0` is found and this sentence is not shown.
+
+On 22 November 2026 a read of versions for `SHOP` returned two names, both unreleased: `1.0` (release date 2026-11-12) and `1.1` (release date 2026-10-26). Asking for `9.9` is the sentence above. The production check is `findVersion` in source `9134e0d`. This was not a new Rovo chat.
 
 ## Development only
 

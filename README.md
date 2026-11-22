@@ -105,6 +105,24 @@ This called `releasesOverview` with the live Jira payload, in source commit `913
 
 [Install Release Gate free and check your own version](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
 
+### Highlights 1 and 3 on 21 November 2026
+
+The public highlights "Checks that name work list the keys" and "Read-only and Runs on Atlassian" show this same SHOP run. The pictures are the function output at 21 November 2026, 05:40 UTC. A new Rovo chat was not opened.
+
+Next unreleased version is 1.1. Release date 26 October 2026, 26 days past, verdict NO-GO. Failed checks: `no_open_blockers` SHOP-5; `no_open_bugs` SHOP-5; `open_work_has_owner` SHOP-5; `not_overdue` SHOP-6, SHOP-5.
+
+Version 1.0, release date 12 November 2026, 9 days past, verdict NO-GO. Failed checks: `no_open_bugs` SHOP-3; `open_work_has_owner` SHOP-4; `not_overdue` SHOP-4, SHOP-3. SHOP-3 is Medium, so `no_open_blockers` stays off that list.
+
+The third highlight places the manifest scope `read:jira-work` beside the 1.0 card. The same issues produce the same verdict.
+
+![SHOP on 21 November 2026, 05:40 UTC. Version 1.1 and version 1.0 are both NO-GO. SHOP-3 is Medium, so no_open_blockers stays off the 1.0 card.](docs/highlight-1-shop-21nov.jpg)
+
+![The manifest asks only for read:jira-work. Version 1.0 on 21 November 2026 is NO-GO, nine days past, while SHOP-3 and SHOP-4 are still open.](docs/highlight-3-shop-21nov.jpg)
+
+The listing files are `ff9d007a-0916-4fbf-9877-18763899222d` and `cba52d37-7766-4f7a-8384-e17dbcdb6718`. Highlight 2 stays `e4b93ec8-84bc-4e84-b5f5-4b91a899a5ea`. The older video further down still shows GO WITH RISKS for 1.0. Those frames are from before the release date passed.
+
+[Install Release Gate free and check your own version](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+
 ### A High bug is not listed as a blocker
 
 High is not Highest, Blocker or Critical, so `no_open_blockers` stays off `failed` for a High bug. The 1.1 row above is the live case: SHOP-5 is Highest. The input below is a separate function example.

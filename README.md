@@ -146,8 +146,9 @@ This called the function in source commit `9134e0d`. A new Rovo chat was not ope
 
 - **Agent missing:** confirm the app is installed on the same Jira site and that Rovo is available;
   ask the site administrator to check access. Do not register a new Forge app.
-- **Project not found or no permission:** use the project key (for example `SHOP`, not `Storefront`)
-  and confirm you can open that project's issues.
+- **Project not found or no permission:** these are different sentences. See
+  [When Jira refuses the project](#when-jira-refuses-the-project). A 404 asks you to check the key.
+  A 401 or 403 does not.
 - **Version not found:** use its exact name. With no name, the app chooses the next unreleased,
   non-archived version by release date; name the version explicitly when comparing results.
 - **Zero issues:** check the issues' **Fix versions** field. An empty version is **GO WITH RISKS**,
@@ -173,6 +174,27 @@ still pass these checks.
 | `has_release_date` | The version has a release date | risk |
 
 Runs on Atlassian: no external egress, no storage outside Jira, read-only scopes.
+
+## When Jira refuses the project
+
+[Install Release Gate for Jira](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+The check reads versions with your Jira permission. A refused read does not show Jira's JSON.
+It shows one of the sentences below. A wrong key and a missing permission are not the same next step.
+
+**Input:** the project key you asked about, and the HTTP status Jira returned for that read.
+
+| Status | What you see | What to do |
+|---|---|---|
+| 404 | Jira project "ZZZ" was not found, or you cannot see it. Check the project key. | Use the key, such as `SHOP`, not the project name. |
+| 401 or 403 | You have no permission to read project "ZZZ" in Jira. | The key can be right. You need permission to read that project's issues. Another key does not fix this. |
+| Any other status, for example 500 | Jira returned an error (500). Try again in a moment. | Wait and ask again. This is not a wrong key and not a missing permission. |
+
+Replace `ZZZ` with the key you sent. The number in the third sentence is the status Jira returned.
+
+**Input:** the project exists, you do not name a version, and every version is released or archived.
+**Result:** `SHOP has no unreleased version.` Name a version when you want a released one checked.
+
+On 22 November 2026 a read of versions for the key `NOSUCH` returned HTTP 404. A read of versions for `SHOP` returned HTTP 200, so that key is not the 404 sentence. A 401 and a 403 were not produced on that site. Those two statuses are the second sentence in the production check (`jiraErrorMessage`, source `9134e0d`). This was not a new Rovo chat.
 
 ## Development only
 

@@ -138,7 +138,7 @@ Input passed to the function: version `1.0`, release date 12 November 2026, chec
 | `failed` | `no_open_bugs`, issues `SHOP-3`. `not_overdue`, issues `SHOP-3`. |
 | `no_open_blockers` | Not in `failed`. |
 
-An empty version `9.0` with release date 1 December 2026, checked 10 November 2026 12:00 UTC, is **GO WITH RISKS**. `failed` is only `has_issues`, and `issues` is `[]`. `no_open_blockers` is not listed.
+An empty version `9.0` with release date 1 December 2026, checked 10 November 2026 12:00 UTC, is **GO WITH RISKS**. `failed` is only `has_issues`, and `issues` is `[]`. `no_open_blockers` is not listed. The sentence on each row is in [When a failed check names its rule](#when-a-failed-check-names-its-rule).
 
 This called the function in source commit `9134e0d`. A new Rovo chat was not opened. The production environment that a Marketplace install runs received this build on 21 November 2026 at 01:48 (Forge job `64cfed92056f`). The public listing version is still 2.0.0. The public highlight is the 21 November overview above.
 
@@ -178,6 +178,8 @@ still pass these checks.
 | `done_has_resolution` | Done issues carry a resolution | risk |
 | `has_issues` | The version has at least one issue | risk |
 | `has_release_date` | The version has a release date | risk |
+
+The Rule column is a short name. The sentence copied into the answer is in [When a failed check names its rule](#when-a-failed-check-names-its-rule).
 
 Runs on Atlassian: no external egress, no storage outside Jira, read-only scopes.
 
@@ -249,6 +251,52 @@ An overview of unreleased versions uses the same note when any checked version s
 The first number is how many were checked, at most 10. The second is how many unreleased, non-archived versions the project has. Name the version you want. Ten or fewer unreleased versions do not add this sentence.
 
 The production checks are `versionIssues` and `checkAllReleases` in source `9134e0d`. This was not a new Rovo chat.
+
+## When a failed check names its rule
+
+[Install Release Gate for Jira](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+`checkRelease` returns `failed` with the checks that are not ok. The agent prompt tells the model to copy `id`, `rule` and `issues` from that list, and to leave out a check that is not in it. `rule` is the sentence below, not the short name in the table above. A **GO** has no rows, so none of these sentences appear. Rows keep this order and skip a check that passed.
+
+| Check | Sentence the answer copies | When this row is the only one |
+|---|---|---|
+| `no_open_blockers` | No unfinished issue with priority Highest/Blocker/Critical. | **NO-GO**. Issues: the unfinished issues at Highest, Blocker or Critical. |
+| `no_open_bugs` | No unfinished Bug in the release. | **GO WITH RISKS**. Issues: the unfinished Bugs. |
+| `open_work_has_owner` | Every unfinished issue has an assignee. | **GO WITH RISKS**. Issues: the unfinished issues with no assignee. |
+| `done_has_resolution` | Issues in a Done status carry a resolution (otherwise reports count them as open). | **GO WITH RISKS**. Issues: the Done issues with no resolution. |
+| `has_issues` | The version has issues (an empty version has nothing to verify, so it cannot be a green GO). | **GO WITH RISKS**. Issues: none. |
+| `has_release_date` | The version has a release date. | **GO WITH RISKS**. Issues: none. |
+| `not_overdue` | The release date has not passed while work is still open. | **NO-GO**. Issues: every unfinished issue. |
+
+Highest, Blocker and Critical share the first sentence. The match ignores letter case, so `BLOCKER` and `Critical` are the same row. High, Medium and Low do not use it. `Bug` uses the second sentence. A Story does not, unless another row applies. A Done issue that already has a resolution does not use the resolution sentence. An empty `issues` list means the answer says no issue key.
+
+One row on its own, checked at 10 November 2026 12:00 UTC, with release date 20 November 2026: unfinished Bug `A-6` is only `no_open_bugs`, and the verdict is **GO WITH RISKS**. Unfinished Story `A-7` with no assignee is only `open_work_has_owner`. Done Story `A-8` with no resolution is only `done_has_resolution`. Unfinished Story `A-4`, assigned, with release date 1 November 2026, is only `not_overdue`, and the verdict is **NO-GO**.
+
+**Input:** version `1.0`, release date 20 November 2026, check time 10 November 2026 12:00 UTC, one unfinished Story `A-3` at priority Highest, with an assignee.
+
+**Result:** **NO-GO**. `failed` has one row: `no_open_blockers`, issues `A-3`, sentence `No unfinished issue with priority Highest/Blocker/Critical.` The same story at Blocker or Critical is that same row. At High, the row is absent and this sentence is not in the answer.
+
+**Input:** version `1.0`, no release date, check time 10 November 2026 12:00 UTC. Unfinished Bug `A-6` with an assignee. Unfinished Story `A-7` with no assignee. Done Story `A-8` with no resolution.
+
+**Result:** **GO WITH RISKS**. `failed` has four rows, in this order:
+
+1. `no_open_bugs`, issues `A-6`. `No unfinished Bug in the release.`
+2. `open_work_has_owner`, issues `A-7`. `Every unfinished issue has an assignee.`
+3. `done_has_resolution`, issues `A-8`. `Issues in a Done status carry a resolution (otherwise reports count them as open).`
+4. `has_release_date`, issues none. `The version has a release date.`
+
+**Input:** version `4.0`, release date written as `next week`, check time 10 November 2026 12:00 UTC, one unfinished Story `A-1` with an assignee.
+
+**Result:** **GO WITH RISKS**. Days left is empty. `failed` has one row: `has_release_date`, issues none, the release-date sentence above. `not_overdue` is not a row.
+
+**Input:** version `9.0`, release date 1 December 2026, check time 10 November 2026 12:00 UTC, no issues.
+
+**Result:** **GO WITH RISKS**. `failed` has one row: `has_issues`, issues none. `The version has issues (an empty version has nothing to verify, so it cannot be a green GO).` `not_overdue` is not a row.
+
+**Input:** version `1.0`, release date 12 November 2026, check time 20 November 2026 05:47 UTC, one unfinished Bug `SHOP-3` at priority High, with an assignee.
+
+**Result:** **NO-GO**, days left **-8**. `failed` has two rows. `no_open_bugs`, issues `SHOP-3`, the Bug sentence above. Then `not_overdue`, issues `SHOP-3`. `The release date has not passed while work is still open.` `no_open_blockers` is not a row. A passed date with no open work does not use that sentence, and the verdict can be **GO** with days left still negative.
+
+The production function is `releaseFacts` in source `9134e0d`. `checkRelease` returns that `failed` list unchanged. This was not a new Rovo chat.
 
 ## Development only
 

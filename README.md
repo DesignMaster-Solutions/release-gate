@@ -157,9 +157,10 @@ This called the function in source commit `9134e0d`. A new Rovo chat was not ope
   not a verified green release. That check lists no issue keys.
 - **The date has passed and the verdict is GO:** every issue in the version is done. The overdue
   check fails only while work is open. Days left can stay negative on a GO.
-- **An overview omits your version:** only the first ten eligible versions are checked.
-  Ask for your version by name. When the action reports that only the first 1,000 issues were
-  read, the counts and verdict may be incomplete; do not treat them as a complete release audit.
+- **An overview omits your version, or the answer says the read stopped:** see
+  [When the read stops at 1000 issues](#when-the-read-stops-at-1000-issues).
+  The overview stops at ten unreleased versions. One version stops at 1000 issues.
+  Those are two different sentences.
 
 **GO** means the listed checks passed for the data read. It is not a deployment approval,
 security review, or guarantee that all work is complete: owned, non-blocking open tasks can
@@ -211,6 +212,27 @@ It shows one sentence, and that sentence lists the version names Jira returned.
 The name in quotes is the name you sent. The key is the project key in uppercase. The list after `Known:` is every version name Jira returned for that project, in that order. A released or archived name is included when Jira returns it. Letter case does not matter: `1.0` is found and this sentence is not shown.
 
 On 22 November 2026 a read of versions for `SHOP` returned two names, both unreleased: `1.0` (release date 2026-11-12) and `1.1` (release date 2026-10-26). Asking for `9.9` is the sentence above. The production check is `findVersion` in source `9134e0d`. This was not a new Rovo chat.
+
+## When the read stops at 1000 issues
+
+[Install Release Gate for Jira](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+One version check reads at most 1000 issues. When the search still has another page, the answer adds one note. The number in that note is `1000`, with no comma.
+
+**Input:** a version whose issue search still has a next page after 1000 issues.
+
+**Result:** `Only the first 1000 issues of a version were read: counts and the verdict may be incomplete.`
+
+The verdict and the counts use only those issues. Issues on the next page are not in the counts. Do not treat that verdict as a complete release audit.
+
+An overview of unreleased versions uses the same note when any checked version stops at 1000 issues. A project with more than ten unreleased versions gets a different sentence, and that sentence names both numbers.
+
+**Input:** 11 unreleased versions, and you do not name one.
+
+**Result:** `Only 10 of 11 unreleased versions were checked; summary totals cover these versions only. Ask for a specific version name to check an omitted release.`
+
+The first number is how many were checked, at most 10. The second is how many unreleased, non-archived versions the project has. Name the version you want. Ten or fewer unreleased versions do not add this sentence.
+
+The production checks are `versionIssues` and `checkAllReleases` in source `9134e0d`. This was not a new Rovo chat.
 
 ## Development only
 

@@ -146,6 +146,9 @@ This called the function in source commit `9134e0d`. A new Rovo chat was not ope
 
 - **Agent missing:** confirm the app is installed on the same Jira site and that Rovo is available;
   ask the site administrator to check access. Do not register a new Forge app.
+- **No project key:** there is no verdict. See
+  [When the question has no project key](#when-the-question-has-no-project-key).
+  A blank key is the same sentence. A key in any letter case is not.
 - **Project not found or no permission:** these are different sentences. See
   [When Jira refuses the project](#when-jira-refuses-the-project). A 404 asks you to check the key.
   A 401 or 403 does not.
@@ -177,6 +180,19 @@ still pass these checks.
 | `has_release_date` | The version has a release date | risk |
 
 Runs on Atlassian: no external egress, no storage outside Jira, read-only scopes.
+
+## When the question has no project key
+
+[Install Release Gate for Jira](https://marketplace.atlassian.com/apps/2098465123/release-gate-for-jira).
+Both checks need a project key before they read Jira. With no key, there is no verdict and no issue list.
+
+**Input:** you ask whether a release can go live and you do not name a project key. A blank key, or a key that is not text, is the same input.
+
+**Result:** `Ask the user for the Jira project key.`
+
+That sentence is the whole answer. One version and every upcoming release return it. Name the key, such as `SHOP`, and ask again. A key in any letter case is read as uppercase, so `shop` is `SHOP` and is not this sentence. When the call sends no `projectKey` and the Jira context already has one, that context key is used. A blank `projectKey` is not replaced by the context.
+
+The production checks are `checkRelease` and `checkAllReleases` in source `9134e0d`. They return before any Jira read. This was not a new Rovo chat.
 
 ## When Jira refuses the project
 
